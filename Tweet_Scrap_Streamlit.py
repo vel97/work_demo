@@ -1,19 +1,24 @@
+#Scrapping twitter data using snscrape library
 import streamlit as st
 import pandas as pd
 import snscrape.modules.twitter as sntwitter
 
+#Declaring variables
 tweet_search = input()
 tweets_list = []
+
+#Pulling data from twitter
 for i,tweet in enumerate(sntwitter.TwitterSearchScraper(tweet_search +" "+"since:2021-01-01 until:2021-05-31").get_items()):
     if i>100:
         break
     tweets_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username])
 
+#Storing the pulled data from twitter in a dataframe
 tweets_df = pd.DataFrame(tweets_list, columns=['Datetime', 'Tweet Id', 'Text', 'Username'])
 st.dataframe(tweets_df)
 
-# Downloading the data in required format
-#CSV
+# To download the data in required format from streamlit app
+#CSV format
 @st.cache
 def convert_csv(tweets_df):
     return tweets_df.to_csv().encode('utf-8')
@@ -27,7 +32,7 @@ st.download_button(
     mime='text/csv',
 )
 
-#JSON
+#JSON format
 @st.cache
 def convert_json(tweets_df):
     return tweets_df.to_json().encode('utf-8')
@@ -40,9 +45,7 @@ st.download_button(
     mime='json',
 )
 
-
-
-########## Data collection in Mongodb #######################
+# Data collection in Mongodb from streamlit 
 if st.button('Push to Database'):
     import pymongo
     from pymongo import MongoClient
@@ -55,10 +58,3 @@ if st.button('Push to Database'):
     print('Data pushed to Database')
 else:
     pass
-
-
-
-
-
-
-
