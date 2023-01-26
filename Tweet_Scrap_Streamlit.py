@@ -1,4 +1,5 @@
 #Scrapping twitter data using snscrape library
+#Importing required libraries
 import streamlit as st
 import pandas as pd
 import snscrape.modules.twitter as sntwitter
@@ -17,7 +18,7 @@ for i,tweet in enumerate(sntwitter.TwitterSearchScraper(tweet_search +" "+"since
 tweets_df = pd.DataFrame(tweets_list, columns=['Datetime', 'Tweet Id', 'Text', 'Username'])
 st.dataframe(tweets_df)
 
-# To download the data in required format from streamlit app
+#To download the data in required format from streamlit app
 #CSV format
 @st.cache
 def convert_csv(tweets_df):
@@ -45,16 +46,16 @@ st.download_button(
     mime='json',
 )
 
-# Data collection in Mongodb from streamlit 
+#Data collection in Mongodb from streamlit 
+import pymongo
+from pymongo import MongoClient
+
+#Using button from streamlit to push data to MongoDB
 if st.button('Push to Database'):
-    import pymongo
-    from pymongo import MongoClient
-    import pandas as pd
     pm = MongoClient("mongodb://Guser:Guvi.com3@ac-zstnwxd-shard-00-00.e8i7hjr.mongodb.net:27017,ac-zstnwxd-shard-00-01.e8i7hjr.mongodb.net:27017,ac-zstnwxd-shard-00-02.e8i7hjr.mongodb.net:27017/?ssl=true&replicaSet=atlas-9s52qi-shard-0&authSource=admin&retryWrites=true&w=majority")
     pm1 = pm['Twitter_data']
     data_dict = tweets_df.to_dict('records')
     pmcollections1 = pm1[input()]
     pmcollections1.insert_many(data_dict)
     print('Data pushed to Database')
-else:
-    pass
+    st.write('Data pushed to Database')
