@@ -53,7 +53,7 @@ if st.button("Scrap the data"):
     tweets_csv = convert_csv(tweets_df)
     st.download_button(
     label="Download data as CSV",
-    data=tweets_df.to_csv(),
+    data=tweets_csv,
     file_name=tweet_search+".csv",
     mime='text/csv',
 )
@@ -62,12 +62,12 @@ if st.button("Scrap the data"):
     tweets_json = convert_json(tweets_df)
     st.download_button(
     label="Download data as JSON",
-    data=tweets_df.to_json(),
+    data=tweets_json,
     file_name=tweet_search+".json",
     mime='json',
 )
 
-#Pushing data to MongoDB
+#Using button from streamlit to push data to MongoDB
 if st.button('Push to Database'):
     tweets = scrap_twitter(tweet_search, start_date, end_date, limit)
     tweets_df = create_dataframe(tweets)
